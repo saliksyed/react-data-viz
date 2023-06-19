@@ -1,25 +1,13 @@
 import {
-  CategoricalAxis,
+  AxisDefinition,
   AxisOrientation,
   AxisPosition,
   Value,
 } from "../../lib/types";
 
-function AxisLabel({ value }: { value: Value }) {
-  return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <span>{value}</span>
-    </div>
-  );
-}
 
-function AxisTitle({
+
+function AxisLabel({
   value,
   orientation,
 }: {
@@ -39,88 +27,12 @@ function AxisTitle({
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        padding: 4,
-        background: "gray",
-        border: "1px solid black"
+        background: "lightgray",
+        border: "0.25px solid gray",
+        overflow: "hidden",
       }}
     >
       <span style={style}>{value}</span>
-    </div>
-  );
-}
-
-// function AxisItem() {
-//   return (
-//     <div
-//       style={{
-//         display: "flex",
-//         flex: 1,
-//         flexGrow: 1,
-//         background: "blue",
-//         border: "1px solid red",
-//       }}
-//     >
-//     </div>
-//   );
-// }
-
-function NestedItems({
-  axis,
-  position,
-  orientation,
-}: {
-  axis: CategoricalAxis
-  position: AxisPosition;
-  orientation: AxisOrientation;
-}) {
-  const style =
-    orientation === "vertical"
-      ? {
-          gridTemplateRows: `repeat(${axis.subitems.length}, 1fr)`,
-        }
-      : {
-          gridTemplateColumns: `repeat(${axis.subitems.length}, 1fr)`,
-        };
-  return (
-    <div
-      style={{
-        display: "flex",
-        flex: 1,
-        flexGrow: 1,
-        flexDirection: orientation === "horizontal" ? "column" : "row",
-      }}
-    >
-      {position === "before" && axis.subTitle && (
-        <AxisTitle value={axis.subTitle} orientation={orientation} />
-      )}
-      {axis.subitems.length > 0 && <div
-        style={{
-          ...style,
-          display: "grid",
-        }}
-      >
-        {Array.from({ length: axis.subitems.length }, (value, index) => index).map(
-          (d, idx) => {
-            return (
-              <div
-                key={"axis-item-" + d}
-                style={{
-                  display: "flex",
-                  flex: 1,
-                  alignItems: "stretch",
-                  flexDirection: orientation === "horizontal" ? "column" : "row",
-                  flexGrow: 1,
-                }}
-              >
-                <NestedAxis position={position} orientation={orientation} axis={axis.subitems[d]}/>
-              </div>
-            );
-          }
-        )}
-      </div>}
-      {position === "after" && axis.subTitle && (
-        <AxisTitle value={axis.subTitle} orientation={orientation} />
-      )}
     </div>
   );
 }
@@ -132,12 +44,21 @@ export function NestedAxis({
 }: {
   orientation: AxisOrientation;
   position: AxisPosition;
-  axis: CategoricalAxis
-
+  axis: AxisDefinition;
 }) {
   // set defaults
   if (!orientation) orientation = "horizontal";
   if (!position) position = "after";
+
+  const axisCount = axis.subitems ? axis.subitems.length : 1;
+  const style =
+    orientation === "vertical"
+      ? {
+          gridTemplateRows: `repeat(${axisCount}, 1fr)`,
+        }
+      : {
+          gridTemplateColumns: `repeat(${axisCount}, 1fr)`,
+        };
   return (
     <div
       style={{
@@ -147,13 +68,52 @@ export function NestedAxis({
         height: orientation !== "horizontal" ? "100%" : undefined,
       }}
     >
-      {position === "before" && axis.title && (
-        <AxisTitle value={axis.title} orientation={orientation} />
-      )}
-      <NestedItems position={position} orientation={orientation} axis={axis}/>
-      {position === "after" && axis.title && (
-        <AxisTitle value={axis.title} orientation={orientation} />
-      )}
+      {position==="before" && <AxisLabel value={axis.title} orientation={orientation}/>}
+      <div
+        style={{
+          display: "flex",
+          flex: 1,
+          flexGrow: 1,
+          flexDirection: orientation === "horizontal" ? "column" : "row",
+        }}
+      >
+        {axis.range && 
+          <AxisLabel value={"range"} orientation={orientation}/>
+        }
+        {axis.subitems && axis.subitems.length > 0 && (
+          <div
+            style={{
+              ...style,
+              display: "grid",
+            }}
+          >
+            {axis.subitems.map((d, idx) => {
+              return (
+                <div
+                  key={"axis-item-" + d}
+                  style={{
+                    display: "flex",
+                    flex: 1,
+                    alignItems: "stretch",
+                    flexDirection:
+                      orientation === "horizontal" ? "column" : "row",
+                    flexGrow: 1,
+                  }}
+                >
+                  {position==="before" && <AxisLabel value={d.title} orientation={orientation}/>}
+                    {d.axis && <NestedAxis
+                      position={position}
+                      orientation={orientation}
+                      axis={d.axis}
+                    />}
+                  {position==="after" && <AxisLabel value={d.title} orientation={orientation}/>}
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+      {position==="after" && <AxisLabel value={axis.title} orientation={orientation}/>}
     </div>
   );
 }
