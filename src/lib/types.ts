@@ -1,4 +1,5 @@
 // Data
+import { CellData } from "../hooks/data";
 
 export type Value = string | number;
 
@@ -35,6 +36,9 @@ export type RangeScale = "log" | "linear";
 export type MarkProps = {
   filters: Filter[];
   data: DataTable;
+  cellData: CellData[];
+  xOffset?: number;
+  yOffset?: number;
   xRange?: Range;
   yRange?: Range;
   width: number;

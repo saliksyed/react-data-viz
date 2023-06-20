@@ -1,29 +1,19 @@
-import { useResizeHandler } from "../../hooks/resize";
-import { useCellData } from "../../hooks/data";
 import { MarkProps } from "../../lib/types";
-import { useState } from "react";
 
-export function Text({
-  filters,
-  data,
-  xRange,
-  yRange,
-  width,
-  height,
-}: MarkProps) {
-  const [elem, setElem] = useState<HTMLDivElement | null>(null);
-  const { cellData } = useCellData({ filters, data, xRange, yRange });
+export function Text(props : MarkProps & React.HTMLAttributes<HTMLDivElement>) {
   return (
     <>
-      {cellData.map((item, i) => {
+      {props.cellData.map((item, i) => {
         const color = "rgba(255, 0, 0, 0.5)";
         return (
           <div
+            {...props}
             key={"text-" + i}
             style={{
               border: "0.5px solid white",
               position: "absolute",
-              marginTop: height - item.yPercent * height,
+              marginTop: props.height - item.yPercent * props.height + (props.yOffset ?? 0),
+              ...props.style,
             }}
           >
             {item.xValue ?? ""} {item.yValue ?? ""}{" "}

@@ -63,6 +63,7 @@ export function Grid({
               yRange,
               filters: path,
               data,
+              cellData: [],
               width: 0,
               height: 0,
             }}
@@ -79,12 +80,12 @@ export function Grid({
       yAxis.subitems.length > 0
         ? yAxis.subitems
         : [{ title: yAxis.title, axis: yAxis }];
-    gridItems = xItems.map((x) => {
-      return yItems.map((y) => {
+    gridItems = yItems.map((y) => {
+      return xItems.map((x) => {
         let soFar = structuredClone(path);
         if (!soFar) soFar = [];
-        if (!xAxis.range) soFar.push({ field: xAxis.title, value: x.title });
         if (!yAxis.range) soFar.push({ field: yAxis.title, value: y.title });
+        if (!xAxis.range) soFar.push({ field: xAxis.title, value: x.title });
         return (
           <div
             key={"grid-" + x.title + "-" + y.title}
