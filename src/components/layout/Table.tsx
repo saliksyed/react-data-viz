@@ -29,11 +29,7 @@ function TableInner({
               padding: 0,
             }}
           >
-            <Axis
-              orientation="horizontal"
-              position="before"
-              axis={xAxis}
-            />
+            <Axis orientation="horizontal" position="before" axis={xAxis} />
           </td>
         </tr>
         <tr>
@@ -51,7 +47,7 @@ function TableInner({
               padding: 0,
             }}
           >
-            <Grid data={data} xAxis={xAxis} yAxis={yAxis} />
+            <Grid data={data} path={[]} xAxis={xAxis} yAxis={yAxis} />
           </td>
         </tr>
       </>
@@ -74,7 +70,7 @@ function TableInner({
               height: "100%",
             }}
           >
-            <Grid data={data} xAxis={xAxis} yAxis={yAxis} />
+            <Grid data={data} path={[]} xAxis={xAxis} yAxis={yAxis} />
           </td>
         </tr>
         <tr>
@@ -88,11 +84,7 @@ function TableInner({
               padding: 0,
             }}
           >
-            <Axis
-              orientation="horizontal"
-              position="after"
-              axis={xAxis}
-            />
+            <Axis orientation="horizontal" position="after" axis={xAxis} />
           </td>
         </tr>
       </>
@@ -108,7 +100,7 @@ function TableInner({
               height: "100%",
             }}
           >
-            <Grid data={data} xAxis={xAxis} yAxis={yAxis} />
+            <Grid data={data} path={[]} xAxis={xAxis} yAxis={yAxis} />
           </td>
           <td
             style={{
@@ -124,11 +116,7 @@ function TableInner({
               padding: 0,
             }}
           >
-            <Axis
-              orientation="horizontal"
-              position="after"
-              axis={xAxis}
-            />
+            <Axis orientation="horizontal" position="after" axis={xAxis} />
           </td>
           <td
             style={{
@@ -147,11 +135,7 @@ function TableInner({
               padding: 0,
             }}
           >
-            <Axis
-              orientation="horizontal"
-              position="before"
-              axis={xAxis}
-            />
+            <Axis orientation="horizontal" position="before" axis={xAxis} />
           </td>
           <td
             style={{
@@ -167,7 +151,7 @@ function TableInner({
               height: "100%",
             }}
           >
-            <Grid data={data} xAxis={xAxis} yAxis={yAxis} />
+            <Grid data={data} path={[]} xAxis={xAxis} yAxis={yAxis} />
           </td>
           <td
             style={{

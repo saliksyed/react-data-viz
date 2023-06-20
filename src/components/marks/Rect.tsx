@@ -4,52 +4,62 @@ import { useState } from "react";
 export function Rect({
   filters,
   data,
-  orientation,
-  range
+  xRange,
+  yRange,
 }: {
-  filters: Filter[],
-  data: DataTable,
-  orientation: AxisOrientation,
-  range?: Range
+  filters: Filter[];
+  data: DataTable;
+  xRange?: Range;
+  yRange?: Range;
 }) {
-  
   const [elem, setElem] = useState<HTMLDivElement | null>(null);
-  const { width, height } = useResizeHandler({ elem })
-  const finalData = data.rows.filter((row) => {
-    let passes = true;
-    filters.forEach((filter) => {
-      if (row[filter.field] !== filter.value) passes = false;
+  const { width, height } = useResizeHandler({ elem });
+
+  const finalData = data.rows
+    .filter((row) => {
+      let passes = true;
+      filters.forEach((filter) => {
+        if (row[filter.field] !== filter.value) passes = false;
+      });
+      return passes;
     })
-    return passes;
-  }).map((row) => {
-    const percent =  range ? (row[range.field] as number - range.min) / (range.max - range.min) : 1.0;
-    return percent;
-  });
-
-  console.log(finalData);
-
-  return <div 
-    ref={setElem}
-    style={{
-      height: "100%",
-      width: "100%",
-      backgroundColor: "darkgray",
-  }}>
-    {
-      finalData.map((percent,i) => {
+    .map((row) => {
+      const xPercent = xRange
+        ? ((row[xRange.field] as number) - xRange.min) /
+          (xRange.max - xRange.min)
+        : 1.0;
+      const yPercent = yRange
+        ? ((row[yRange.field] as number) - yRange.min) /
+          (yRange.max - yRange.min)
+        : 1.0;
+      return { xPercent, yPercent };
+    });
+  return (
+    <div
+      ref={setElem}
+      style={{
+        height: "100%",
+        width: "100%",
+        backgroundColor: "darkgray",
+      }}
+    >
+      {finalData.map((range, i) => {
         const color = "red";
-        
-        return <div 
-          key={"rect-" + i}
-          style={{
-            border: "0.5px solid white",
-            position: "absolute",
-            marginTop: orientation === "vertical" ? height - (percent*height) : 0,
-            width: orientation === "horizontal" ? percent*width + "px" : width,
-            height: orientation === "vertical" ? percent*height + "px" : height,
-            background: color,
-        }}/>
-      })
-    }
-  </div>
+
+        return (
+          <div
+            key={"rect-" + i}
+            style={{
+              border: "0.5px solid white",
+              position: "absolute",
+              marginTop: height - range.yPercent * height,
+              width: range.xPercent * width + "px",
+              height: range.yPercent * height + "px",
+              background: color,
+            }}
+          />
+        );
+      })}
+    </div>
+  );
 }

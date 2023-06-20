@@ -5,95 +5,81 @@ export function Grid({
   xAxis,
   yAxis,
   path,
-  data
+  data,
 }: {
-  xAxis: AxisDefinition;
-  yAxis: AxisDefinition;
-  path?: Filter[];
+  xAxis: AxisDefinition | null;
+  yAxis: AxisDefinition | null;
+  path: Filter[];
   data: DataTable;
 }) {
+  const borderColor = "0.25px solid lightgray";
+
+  // Else recursively render a subgrid
   const style: any = {
     display: "grid",
-    gridTemplateRows: `repeat(${Math.max(1, yAxis.subitems.length)}, minmax(0, 1fr))`,
-    gridTemplateColumns: `repeat(${Math.max(1, xAxis.subitems.length)}, minmax(0, 1fr))`,
+    gridTemplateRows: `repeat(${Math.max(
+      1,
+      yAxis ? yAxis.subitems.length : 1
+    )}, minmax(0, 1fr))`,
+    gridTemplateColumns: `repeat(${Math.max(
+      1,
+      xAxis ? xAxis.subitems.length : 1
+    )}, minmax(0, 1fr))`,
     width: "100%",
     height: "100%",
   };
-  const borderColor = "0.25px solid lightgray";
-  if (xAxis.subitems.length > 0 && yAxis.subitems.length > 0) {
-    return (
-      <div style={style}>
-        {yAxis.subitems.map((y) => {
-          return xAxis.subitems.map((x, idx) => {
-            let soFar = structuredClone(path);
-            if (!soFar) soFar = [];
-            soFar.push({ field: yAxis.title, value: y.title});
-            soFar.push({ field: xAxis.title, value: x.title});
-            return (
-              <div
-                style={{
-                  border: borderColor,
-                }}
-              >
-                {x.axis && y.axis && <Grid data={data} xAxis={x.axis} yAxis={y.axis} path={soFar}/>}
-                {x.axis && !y.axis && <Grid data={data} xAxis={x.axis} yAxis={yAxis} path={soFar}/>}
-                {!x.axis && y.axis && <Grid data={data} xAxis={xAxis} yAxis={y.axis} path={soFar}/>}
-                {(!x.axis && !y.axis) && <Rect orientation={"vertical"} filters={soFar} data={data}/>}
-              </div>
-            );
-          });
-        })}
-      </div>
-    );
-  } else if (xAxis.subitems.length > 0) {
-    return (
-      <div style={style}>
-        {xAxis.subitems.map((x, idx) => {
-          let soFar = structuredClone(path);
-          if (!soFar) soFar = [];
-          soFar.push({ field: xAxis.title, value: x.title});
-          return (
-            <div
-              style={{
-                border: borderColor,
-              }}
-            >
-              {x.axis && <Grid data={data} xAxis={x.axis} yAxis={yAxis} path={soFar}/>}
-              {!x.axis && <Rect range={yAxis.range!} orientation={"vertical"} filters={soFar} data={data}/>}
-            </div>
-          );
-        })}
-      </div>
-    );
-  } else if (yAxis.subitems.length > 0) {
-    return (
-      <div style={style}>
-        {yAxis.subitems.map((y, idx) => {
-          let soFar = structuredClone(path);
-          if (!soFar) soFar = [];
-          soFar.push({ field: yAxis.title, value: y.title});
-          return (
-            <div
-              style={{
-                border: borderColor,
-              }}
-            >
-              {y.axis && <Grid data={data} xAxis={xAxis} yAxis={y.axis} path={soFar} />}
-              {!y.axis && <Rect range={xAxis.range!}  orientation={"horizontal"} filters={soFar} data={data}/>}
-            </div>
-          );
-        })}
-      </div>
-    );
+
+  let gridItems: any = [];
+
+  // if either axis is undefined, render mark
+  if (
+    !xAxis ||
+    !yAxis ||
+    (xAxis &&
+      xAxis.range &&
+      yAxis &&
+      yAxis.range)
+  ) {
+    let xRange = undefined;
+    let yRange = undefined;
+    if (xAxis && xAxis.range) xRange = xAxis.range;
+    if (yAxis && yAxis.range) yRange = yAxis.range;
+    console.log('rect', path);
+    gridItems = [
+      <div
+        className="empty"
+        style={{
+          border: borderColor,
+          width: "100%",
+          height: "100%",
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+        }}
+      >
+        <Rect xRange={xRange} yRange={yRange} filters={path} data={data} />
+      </div>,
+    ];
   } else {
-    return <div
-      className="empty"
-      style={{
-        border: borderColor,
-        width: "100%",
-        height: "100%",
-        backgroundColor: "rgba(0, 0, 0, 0.5)"
-      }}
-    />;
+    const xItems = xAxis.subitems.length > 0 ? xAxis.subitems : [{ title: xAxis.title, axis: xAxis}];
+    const yItems = yAxis.subitems.length > 0 ? yAxis.subitems : [{ title: yAxis.title, axis: yAxis}];
+    gridItems = xItems.map((x) => {
+      return yItems.map((y) => {
+        let soFar = structuredClone(path);
+        if (!soFar) soFar = [];
+        if (!xAxis.range) soFar.push({ field: xAxis.title, value: x.title });
+        if (!yAxis.range) soFar.push({ field: yAxis.title, value: y.title });
+        return (
+          <div
+            style={{
+              border: borderColor,
+            }}
+          >
+            {<Grid data={data} xAxis={x.axis} yAxis={y.axis} path={soFar} />}
+          </div>
+        );
+      });
+    });
+    
   }
+  
+  return <div style={style}>{gridItems}</div>;
 }

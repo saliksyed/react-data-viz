@@ -16,7 +16,7 @@ export type CategoricalField = {
 
 export type Column = QuantitativeField | CategoricalField;
 
-export type Filter = {field: Value, value: Value};
+export type Filter = { field: Value; value: Value };
 
 export type Row = {
   [key: string]: Value;
@@ -39,7 +39,7 @@ export type Range = {
   scale: RangeScale;
 };
 
-type AxisSubItem = {title: Value, axis: AxisDefinition | null };
+type AxisSubItem = { title: Value; axis: AxisDefinition | null };
 
 export type AxisDefinition = {
   title: Value;
@@ -47,34 +47,40 @@ export type AxisDefinition = {
   range?: Range;
 };
 
-export function getAxisDefinition(items: Column[], data: DataTable) : AxisDefinition {
+export function getAxisDefinition(
+  items: Column[],
+  data: DataTable
+): AxisDefinition {
   if (items.length === 0) {
-    throw 'Invalid axis definition';
+    throw "Invalid axis definition";
   } else {
     if (items[0].type === "quantitative") {
-      if (items.length > 1) throw 'Cannot nest after quantitative field';
+      if (items.length > 1) throw "Cannot nest after quantitative field";
       return {
         title: items[0].name,
         range: {
           field: items[0].name,
           min: 0,
           max: 1,
-          scale: "linear"
+          scale: "linear",
         },
-        subitems: []
+        subitems: [],
       } as AxisDefinition;
     } else {
       const remaining = items.slice(1);
-      const unique = Array.from(new Set(data.rows.map(d => d[items[0].name])));
+      const unique = Array.from(
+        new Set(data.rows.map((d) => d[items[0].name]))
+      );
 
       return {
         title: items[0].name,
-        subitems: unique.map(d => {
+        subitems: unique.map((d) => {
           return {
             title: d,
-            axis: remaining.length > 0 ? getAxisDefinition(remaining, data) : null
-          }
-        }) as AxisSubItem[]
+            axis:
+              remaining.length > 0 ? getAxisDefinition(remaining, data) : null,
+          };
+        }) as AxisSubItem[],
       };
     }
   }

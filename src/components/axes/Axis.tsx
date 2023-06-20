@@ -3,10 +3,10 @@ import {
   AxisOrientation,
   AxisPosition,
   Value,
-  Range
+  Range,
 } from "../../lib/types";
 import { useState, useEffect } from "react";
-import * as d3 from 'd3';
+import * as d3 from "d3";
 import { useResizeHandler } from "../../hooks/resize";
 
 function AxisLabel({
@@ -51,7 +51,7 @@ function AxisScale({
 }) {
   const [svg, setSvg] = useState<SVGElement | null>(null);
   const [elem, setElem] = useState<HTMLDivElement | null>(null);
-  const { width , height } = useResizeHandler({elem})
+  const { width, height } = useResizeHandler({ elem });
   useEffect(() => {
     if (!svg) return;
     d3.select(svg).selectAll("svg > *").remove();
@@ -60,27 +60,31 @@ function AxisScale({
     const rect = svg.getBoundingClientRect();
     if (position === "after") {
       if (orientation === "horizontal") {
-        const scale = d3.scaleLinear()
-                      .domain([range.min, range.max])
-                      .range([0, rect.width]);
+        const scale = d3
+          .scaleLinear()
+          .domain([range.min, range.max])
+          .range([0, rect.width]);
         axis = d3.axisBottom(scale);
       } else {
-        const scale = d3.scaleLinear()
-                      .domain([range.max, range.min])
-                      .range([0, rect.height]);
+        const scale = d3
+          .scaleLinear()
+          .domain([range.max, range.min])
+          .range([0, rect.height]);
         axis = d3.axisRight(scale);
       }
     } else {
       if (orientation === "horizontal") {
-        const scale = d3.scaleLinear()
-                      .domain([range.min, range.max])
-                      .range([0, rect.width]);
+        const scale = d3
+          .scaleLinear()
+          .domain([range.min, range.max])
+          .range([0, rect.width]);
         axis = d3.axisTop(scale);
         transform = "translate(0, 35)";
       } else {
-        const scale = d3.scaleLinear()
-        .domain([range.max, range.min])
-        .range([0, rect.height]);
+        const scale = d3
+          .scaleLinear()
+          .domain([range.max, range.min])
+          .range([0, rect.height]);
         axis = d3.axisLeft(scale);
         transform = "translate(35, 0)";
       }
@@ -88,11 +92,12 @@ function AxisScale({
 
     d3.select(svg).append("g").attr("transform", transform).call(axis);
 
-
-    d3.select(svg).selectAll(".tick").filter((d) => {
-      return d === range.min || d === range.max;
-    }).remove();
-
+    d3.select(svg)
+      .selectAll(".tick")
+      .filter((d) => {
+        return d === range.min || d === range.max;
+      })
+      .remove();
   }, [svg, width, height]);
   return (
     <div
@@ -102,13 +107,13 @@ function AxisScale({
         background: "lightgray",
       }}
     >
-      <svg style={{
-        height: orientation === "vertical" ? "100%" : 35,
-        width: orientation === "horizontal" ? "100%" : 35
-      }}
+      <svg
+        style={{
+          height: orientation === "vertical" ? "100%" : 35,
+          width: orientation === "horizontal" ? "100%" : 35,
+        }}
         ref={setSvg}
-      >
-      </svg>
+      ></svg>
     </div>
   );
 }
@@ -144,7 +149,9 @@ export function Axis({
         height: orientation !== "horizontal" ? "100%" : undefined,
       }}
     >
-      {position==="before" && <AxisLabel value={axis.title} orientation={orientation}/>}
+      {position === "before" && (
+        <AxisLabel value={axis.title} orientation={orientation} />
+      )}
       <div
         style={{
           display: "flex",
@@ -153,9 +160,13 @@ export function Axis({
           flexDirection: orientation === "horizontal" ? "column" : "row",
         }}
       >
-        {axis.range && 
-          <AxisScale range={axis.range} position={position} orientation={orientation}/>
-        }
+        {axis.range && (
+          <AxisScale
+            range={axis.range}
+            position={position}
+            orientation={orientation}
+          />
+        )}
         {axis.subitems && axis.subitems.length > 0 && (
           <div
             style={{
@@ -176,20 +187,28 @@ export function Axis({
                     flexGrow: 1,
                   }}
                 >
-                  {position==="before" && <AxisLabel value={d.title} orientation={orientation}/>}
-                    {d.axis && <Axis
+                  {position === "before" && (
+                    <AxisLabel value={d.title} orientation={orientation} />
+                  )}
+                  {d.axis && (
+                    <Axis
                       position={position}
                       orientation={orientation}
                       axis={d.axis}
-                    />}
-                  {position==="after" && <AxisLabel value={d.title} orientation={orientation}/>}
+                    />
+                  )}
+                  {position === "after" && (
+                    <AxisLabel value={d.title} orientation={orientation} />
+                  )}
                 </div>
               );
             })}
           </div>
         )}
       </div>
-      {position==="after" && <AxisLabel value={axis.title} orientation={orientation}/>}
+      {position === "after" && (
+        <AxisLabel value={axis.title} orientation={orientation} />
+      )}
     </div>
   );
 }

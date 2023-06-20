@@ -22,19 +22,16 @@ function App() {
     ],
   };
 
-  const xAxisValues = getAxisDefinition(
-    [dataTable.columns[0]],
-    dataTable
-  );
-  const yAxisValues = getAxisDefinition(
-    [dataTable.columns[2]],
-    dataTable
-  );
+  const xAxisValues = getAxisDefinition([dataTable.columns[3]], dataTable);
+  const yAxisValues = getAxisDefinition([dataTable.columns[2], dataTable.columns[1]], dataTable);
+
+  console.log(JSON.stringify(xAxisValues, null, 2));
+  console.log(JSON.stringify(yAxisValues, null, 2));
 
   return (
     <div
       style={{
-        width: "30vw",
+        width: "80vw",
         height: "50vh",
         background: "rgba(0, 0, 0, 0.1)",
         fontFamily: "'Roboto', sans-serif",
