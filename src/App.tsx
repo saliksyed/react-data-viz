@@ -22,30 +22,29 @@ function App() {
   };
 
   const xAxisValues = getAxisDefinition(
-    [dataTable.columns[0], dataTable.columns[1], dataTable.columns[2], dataTable.columns[3]],
+    [dataTable.columns[0], dataTable.columns[2], dataTable.columns[3]],
     dataTable
   );
   const yAxisValues = getAxisDefinition(
-    [dataTable.columns[2], dataTable.columns[1], dataTable.columns[0], dataTable.columns[3]],
+    [dataTable.columns[2],dataTable.columns[1], dataTable.columns[3]],
     dataTable
   );
 
-  console.log(xAxisValues);
-  console.log(yAxisValues);
+  console.log(xAxisValues, yAxisValues);
   return (
     <div
       style={{
-        width: "100vw",
-        height: "100vh",
-        background: "yellow",
+        width: "90vw",
+        height: "90vh",
+        background: "white",
         fontFamily: "'Roboto', sans-serif",
       }}
     >
       <Table
         xAxis={xAxisValues}
-        xPosition="after"
+        xPosition="before"
         yAxis={yAxisValues}
-        yPosition="after"
+        yPosition="before"
       />
     </div>
   );

@@ -2,7 +2,6 @@
 
 export type Value = string | number;
 
-
 export type FieldType = "quantitative" | "categorical";
 
 export type QuantitativeField = {
@@ -29,7 +28,6 @@ export type DataTable = {
 export type AxisOrientation = "vertical" | "horizontal";
 export type AxisPosition = "before" | "after";
 
-
 export type RangeScale = "log" | "linear";
 
 export type Range = {
@@ -45,7 +43,6 @@ export type AxisDefinition = {
   subitems: AxisSubItem[];
   range?: Range;
 };
-
 
 export function getAxisDefinition(items: Column[], data: DataTable) : AxisDefinition {
   if (items.length === 0) {

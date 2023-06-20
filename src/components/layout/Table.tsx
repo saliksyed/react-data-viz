@@ -1,6 +1,6 @@
 import { AxisDefinition, AxisPosition } from "../../lib/types";
 import { Grid } from "./Grid";
-import { NestedAxis } from "../axes/CategoricalAxis";
+import { Axis } from "../axes/Axis";
 
 function TableInner({
   xAxis,
@@ -27,7 +27,7 @@ function TableInner({
               padding: 0,
             }}
           >
-            <NestedAxis
+            <Axis
               orientation="horizontal"
               position="before"
               axis={xAxis}
@@ -40,7 +40,7 @@ function TableInner({
               padding: 0,
             }}
           >
-            <NestedAxis orientation="vertical" position="before" axis={yAxis} />
+            <Axis orientation="vertical" position="before" axis={yAxis} />
           </td>
           <td
             style={{
@@ -63,7 +63,7 @@ function TableInner({
               padding: 0,
             }}
           >
-            <NestedAxis orientation="vertical" position="before" axis={yAxis} />
+            <Axis orientation="vertical" position="before" axis={yAxis} />
           </td>
           <td
             style={{
@@ -86,7 +86,7 @@ function TableInner({
               padding: 0,
             }}
           >
-            <NestedAxis
+            <Axis
               orientation="horizontal"
               position="after"
               axis={xAxis}
@@ -113,7 +113,7 @@ function TableInner({
               padding: 0,
             }}
           >
-            <NestedAxis orientation="vertical" position="after" axis={yAxis} />
+            <Axis orientation="vertical" position="after" axis={yAxis} />
           </td>
         </tr>
         <tr>
@@ -122,7 +122,7 @@ function TableInner({
               padding: 0,
             }}
           >
-            <NestedAxis
+            <Axis
               orientation="horizontal"
               position="after"
               axis={xAxis}
@@ -145,7 +145,7 @@ function TableInner({
               padding: 0,
             }}
           >
-            <NestedAxis
+            <Axis
               orientation="horizontal"
               position="before"
               axis={xAxis}
@@ -172,7 +172,7 @@ function TableInner({
               padding: 0,
             }}
           >
-            <NestedAxis orientation="vertical" position="after" axis={yAxis} />
+            <Axis orientation="vertical" position="after" axis={yAxis} />
           </td>
         </tr>
       </>
