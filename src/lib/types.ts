@@ -16,6 +16,8 @@ export type CategoricalField = {
 
 export type Column = QuantitativeField | CategoricalField;
 
+export type Filter = {field: Value, value: Value};
+
 export type Row = {
   [key: string]: Value;
 };
@@ -31,6 +33,7 @@ export type AxisPosition = "before" | "after";
 export type RangeScale = "log" | "linear";
 
 export type Range = {
+  field: string;
   min: number;
   max: number;
   scale: RangeScale;
@@ -53,6 +56,7 @@ export function getAxisDefinition(items: Column[], data: DataTable) : AxisDefini
       return {
         title: items[0].name,
         range: {
+          field: items[0].name,
           min: 0,
           max: 1,
           scale: "linear"

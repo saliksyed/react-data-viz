@@ -1,4 +1,4 @@
-import { AxisDefinition, AxisPosition } from "../../lib/types";
+import { AxisDefinition, AxisPosition, DataTable } from "../../lib/types";
 import { Grid } from "./Grid";
 import { Axis } from "../axes/Axis";
 
@@ -7,11 +7,13 @@ function TableInner({
   yAxis,
   xPosition,
   yPosition,
+  data,
 }: {
   xAxis: AxisDefinition;
   yAxis: AxisDefinition;
   xPosition: AxisPosition;
   yPosition: AxisPosition;
+  data: DataTable;
 }) {
   if (xPosition === "before" && yPosition == "before") {
     return (
@@ -49,7 +51,7 @@ function TableInner({
               padding: 0,
             }}
           >
-            <Grid xAxis={xAxis} yAxis={yAxis} />
+            <Grid data={data} xAxis={xAxis} yAxis={yAxis} />
           </td>
         </tr>
       </>
@@ -72,7 +74,7 @@ function TableInner({
               height: "100%",
             }}
           >
-            <Grid xAxis={xAxis} yAxis={yAxis} />
+            <Grid data={data} xAxis={xAxis} yAxis={yAxis} />
           </td>
         </tr>
         <tr>
@@ -106,7 +108,7 @@ function TableInner({
               height: "100%",
             }}
           >
-            <Grid xAxis={xAxis} yAxis={yAxis} />
+            <Grid data={data} xAxis={xAxis} yAxis={yAxis} />
           </td>
           <td
             style={{
@@ -165,7 +167,7 @@ function TableInner({
               height: "100%",
             }}
           >
-            <Grid xAxis={xAxis} yAxis={yAxis} />
+            <Grid data={data} xAxis={xAxis} yAxis={yAxis} />
           </td>
           <td
             style={{
@@ -186,11 +188,13 @@ export function Table({
   yAxis,
   xPosition,
   yPosition,
+  data,
 }: {
   xAxis: AxisDefinition;
   yAxis: AxisDefinition;
   xPosition: AxisPosition;
   yPosition: AxisPosition;
+  data: DataTable;
 }) {
   return (
     <table
@@ -203,6 +207,7 @@ export function Table({
     >
       <tbody>
         <TableInner
+          data={data}
           xAxis={xAxis}
           yAxis={yAxis}
           xPosition={xPosition}

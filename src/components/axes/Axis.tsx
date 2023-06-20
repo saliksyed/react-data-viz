@@ -7,6 +7,7 @@ import {
 } from "../../lib/types";
 import { useState, useEffect } from "react";
 import * as d3 from 'd3';
+import { useResizeHandler } from "../../hooks/resize";
 
 function AxisLabel({
   value,
@@ -49,12 +50,11 @@ function AxisScale({
   range: Range;
 }) {
   const [svg, setSvg] = useState<SVGElement | null>(null);
-
+  const [elem, setElem] = useState<HTMLDivElement | null>(null);
+  const { width , height } = useResizeHandler({elem})
   useEffect(() => {
     if (!svg) return;
     d3.select(svg).selectAll("svg > *").remove();
-
-
     let axis = null;
     let transform = null;
     const rect = svg.getBoundingClientRect();
@@ -93,15 +93,13 @@ function AxisScale({
       return d === range.min || d === range.max;
     }).remove();
 
-  }, [svg]);
+  }, [svg, width, height]);
   return (
     <div
+      ref={setElem}
       style={{
         display: "flex",
         background: "lightgray",
-        overflow: "hidden",
-        minHeight: orientation === "vertical" ? 150 :  35,
-        minWidth: orientation === "horizontal" ? 150 : 35
       }}
     >
       <svg style={{
@@ -132,10 +130,10 @@ export function Axis({
   const style =
     orientation === "vertical"
       ? {
-          gridTemplateRows: `repeat(${axisCount}, 1fr)`,
+          gridTemplateRows: `repeat(${axisCount}, minmax(0, 1fr))`,
         }
       : {
-          gridTemplateColumns: `repeat(${axisCount}, 1fr)`,
+          gridTemplateColumns: `repeat(${axisCount}, minmax(0, 1fr))`,
         };
   return (
     <div
@@ -168,7 +166,7 @@ export function Axis({
             {axis.subitems.map((d, idx) => {
               return (
                 <div
-                  key={"axis-item-" + d}
+                  key={"axis-item-" + d.title}
                   style={{
                     display: "flex",
                     flex: 1,

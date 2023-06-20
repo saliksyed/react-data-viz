@@ -4,43 +4,44 @@ import { Table } from "./components/layout/Table";
 function App() {
   const dataTable: DataTable = {
     columns: [
-      { type: "categorical", name: "a" },
-      { type: "categorical", name: "b" },
+      { type: "categorical", name: "region" },
+      { type: "categorical", name: "group" },
       { type: "categorical", name: "c" },
-      { type: "quantitative", name: "d" },
+      { type: "quantitative", name: "revenue" },
     ],
     rows: [
-      { a: 1, b: 1, c: "true", d: 0.1 },
-      { a: 2, b: 2, c: "true", d: 0.1 },
-      { a: 3, b: 3, c: "false", d: 0.21 },
-      { a: 4, b: 4, c: "true", d: 0.51 },
-      { a: 5, b: 5, c: "true", d: 0.33 },
-      { a: 6, b: 6, c: "false", d: 0.25 },
-      { a: 7, b: 7, c: "true", d: 0.7 },
-      { a: 8, b: 8, c: "false", d: 0.1 },
+      { region: 1, group: 1, c: "true", revenue: 0.1 },
+      { region: 2, group: 2, c: "true", revenue: 0.18 },
+      { region: 3, group: 3, c: "false", revenue: 0.21 },
+      { region: 4, group: 4, c: "true", revenue: 0.91 },
+      { region: 5, group: 5, c: "true", revenue: 0.33 },
+      { region: 4, group: 5, c: "true", revenue: 0.47 },
+      { region: 6, group: 6, c: "false", revenue: 0.25 },
+      { region: 7, group: 7, c: "true", revenue: 0.4 },
+      { region: 8, group: 8, c: "false", revenue: 0.1 },
     ],
   };
 
   const xAxisValues = getAxisDefinition(
-    [dataTable.columns[0], dataTable.columns[2], dataTable.columns[3]],
+    [dataTable.columns[0]],
     dataTable
   );
   const yAxisValues = getAxisDefinition(
-    [dataTable.columns[2],dataTable.columns[1], dataTable.columns[3]],
+    [dataTable.columns[2]],
     dataTable
   );
 
-  console.log(xAxisValues, yAxisValues);
   return (
     <div
       style={{
-        width: "90vw",
-        height: "90vh",
-        background: "white",
+        width: "30vw",
+        height: "50vh",
+        background: "rgba(0, 0, 0, 0.1)",
         fontFamily: "'Roboto', sans-serif",
       }}
     >
       <Table
+        data={dataTable}
         xAxis={xAxisValues}
         xPosition="before"
         yAxis={yAxisValues}
