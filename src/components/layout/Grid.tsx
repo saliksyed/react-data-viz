@@ -1,17 +1,20 @@
-import { AxisDefinition, Filter, DataTable } from "../../lib/types";
-import { Rect } from "../marks/Rect";
+import { AxisDefinition, Filter, DataTable, MarkProps } from "../../lib/types";
+import { Text } from "../marks/Text";
 
 export function Grid({
   xAxis,
   yAxis,
   path,
   data,
+  mark,
 }: {
   xAxis: AxisDefinition | null;
   yAxis: AxisDefinition | null;
   path: Filter[];
   data: DataTable;
+  mark?: (props: MarkProps) => React.ReactElement
 }) {
+  if (!mark) mark = Text;
   const borderColor = "0.25px solid lightgray";
 
   // Else recursively render a subgrid
@@ -38,16 +41,15 @@ export function Grid({
     (xAxis &&
       xAxis.range &&
       yAxis &&
-      yAxis.range)
+      yAxis.range) ||
+    (xAxis.subitems.length === 0 && yAxis.subitems.length === 0)
   ) {
     let xRange = undefined;
     let yRange = undefined;
     if (xAxis && xAxis.range) xRange = xAxis.range;
     if (yAxis && yAxis.range) yRange = yAxis.range;
-    console.log('rect', path);
     gridItems = [
       <div
-        className="empty"
         style={{
           border: borderColor,
           width: "100%",
@@ -55,7 +57,12 @@ export function Grid({
           backgroundColor: "rgba(0, 0, 0, 0.5)",
         }}
       >
-        <Rect xRange={xRange} yRange={yRange} filters={path} data={data} />
+        {mark({
+          xRange,
+          yRange,
+          filters: path,
+          data
+        })}
       </div>,
     ];
   } else {
@@ -69,11 +76,12 @@ export function Grid({
         if (!yAxis.range) soFar.push({ field: yAxis.title, value: y.title });
         return (
           <div
+            key={'grid-'+x.title + '-' + y.title} 
             style={{
               border: borderColor,
             }}
           >
-            {<Grid data={data} xAxis={x.axis} yAxis={y.axis} path={soFar} />}
+            {<Grid mark={mark} data={data} xAxis={x.axis} yAxis={y.axis} path={soFar} />}
           </div>
         );
       });

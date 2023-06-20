@@ -4,6 +4,7 @@ import {
   AxisPosition,
   Value,
   Range,
+  Dimension,
 } from "../../lib/types";
 import { useState, useEffect } from "react";
 import * as d3 from "d3";
@@ -118,14 +119,33 @@ function AxisScale({
   );
 }
 
+
+function getFinalAxisDims(orientation: AxisOrientation, dimensions? : Dimension) {
+  if (!dimensions) {
+    if (orientation === "horizontal") {
+      return { width: "100%", height: undefined }
+    } else {
+      return { width: undefined, height: "100%" }
+    }
+  } else {
+    if (orientation === "horizontal") {
+      return { width: dimensions.width, height: dimensions.height }
+    } else {
+      return { width: dimensions.height, height: dimensions.width }
+    }
+  }
+}
+
 export function Axis({
   orientation,
   position,
   axis,
+  dimensions,
 }: {
   orientation: AxisOrientation;
   position: AxisPosition;
   axis: AxisDefinition;
+  dimensions?: Dimension;
 }) {
   // set defaults
   if (!orientation) orientation = "horizontal";
@@ -140,13 +160,14 @@ export function Axis({
       : {
           gridTemplateColumns: `repeat(${axisCount}, minmax(0, 1fr))`,
         };
+  const dims = getFinalAxisDims(orientation, dimensions);
   return (
     <div
       style={{
         display: "flex",
         flexDirection: orientation === "horizontal" ? "column" : "row",
-        width: orientation === "horizontal" ? "100%" : undefined,
-        height: orientation !== "horizontal" ? "100%" : undefined,
+        width: dims.width,
+        height: dims.height,
       }}
     >
       {position === "before" && (

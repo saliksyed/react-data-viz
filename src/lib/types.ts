@@ -32,6 +32,13 @@ export type AxisPosition = "before" | "after";
 
 export type RangeScale = "log" | "linear";
 
+export type MarkProps = {
+  filters: Filter[];
+  data: DataTable;
+  xRange?: Range;
+  yRange?: Range;
+};
+
 export type Range = {
   field: string;
   min: number;
@@ -47,21 +54,59 @@ export type AxisDefinition = {
   range?: Range;
 };
 
+export type Dimension = { width: number, height: number };
+
+export function getAxisDimensions(axis: AxisDefinition) : Dimension {
+  const CHAR_WIDTH = 18;
+  const CHAR_HEIGHT = 24;
+  const AXIS_WIDTH = 54;
+  const PADDING = 24;
+  const titleWidth = CHAR_WIDTH * ("" + axis.title).length + PADDING;
+  const titleHeight = CHAR_HEIGHT;
+  if (axis.range) {
+    return { width: Math.max(180, titleWidth), height: AXIS_WIDTH };
+  }
+  let axisTitlesWidth = 0;
+  let axisTitlesHeight = CHAR_HEIGHT;
+  let axisItemsWidth = 0;
+  let axisItemsHeight = 0;
+  if (axis.subitems.length > 0) {
+    axis.subitems.map((d) => {
+      const currTitleWidth = ("" + d.title).length * CHAR_WIDTH;
+      axisTitlesWidth += currTitleWidth;
+      if (d.axis) {
+        const dims = getAxisDimensions(d.axis);
+        axisItemsWidth += dims.width;
+        axisItemsHeight = Math.max(dims.height, axisItemsHeight);
+      }
+    })
+  }
+  return {
+    width: Math.max(Math.max(titleWidth, axisItemsWidth), axisTitlesWidth),
+    height: titleHeight + axisItemsHeight + axisTitlesHeight,
+  }
+}
+
+
 export function getAxisDefinition(
   items: Column[],
   data: DataTable
 ): AxisDefinition {
   if (items.length === 0) {
-    throw "Invalid axis definition";
+    return {
+      title: "",
+      subitems: []
+    };
   } else {
     if (items[0].type === "quantitative") {
       if (items.length > 1) throw "Cannot nest after quantitative field";
+      const values = data.rows.map(d => d[items[0].name]).sort((a, b) => (a as number) - (b as number))
       return {
         title: items[0].name,
         range: {
           field: items[0].name,
-          min: 0,
-          max: 1,
+          min: Math.floor(values[0] as number),
+          max: Math.ceil(values[values.length - 1] as number),
           scale: "linear",
         },
         subitems: [],

@@ -3,7 +3,7 @@ import { useCellData } from "../../hooks/data";
 import { MarkProps } from "../../lib/types";
 import { useState } from "react";
 
-export function Rect({
+export function Text({
   filters,
   data,
   xRange,
@@ -21,20 +21,19 @@ export function Rect({
         backgroundColor: "darkgray",
       }}
     >
-      {cellData.map((range, i) => {
+      {cellData.map((item, i) => {
         const color = "rgba(255, 0, 0, 0.5)";
         return (
           <div
-            key={"rect-" + i}
+            key={"text-" + i}
             style={{
               border: "0.5px solid white",
               position: "absolute",
-              marginTop: height - range.yPercent * height,
-              width: range.xPercent * width + "px",
-              height: range.yPercent * height + "px",
-              background: color,
+              marginTop: height - item.yPercent * height,
             }}
-          />
+          >
+            {item.xValue ?? ""} {item.yValue ?? ""} {item.filters.map(d => d.value).join(", ")}
+          </div>
         );
       })}
     </div>

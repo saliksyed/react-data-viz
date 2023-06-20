@@ -1,19 +1,26 @@
-import { AxisDefinition, AxisPosition, DataTable } from "../../lib/types";
+import { AxisDefinition, AxisPosition, DataTable, MarkProps, Dimension } from "../../lib/types";
+import { useAxes } from "../../hooks/data";
 import { Grid } from "./Grid";
 import { Axis } from "../axes/Axis";
-
+import { Text } from "../marks/Text";
 function TableInner({
   xAxis,
   yAxis,
   xPosition,
   yPosition,
+  xAxisDims,
+  yAxisDims,
   data,
+  mark,
 }: {
   xAxis: AxisDefinition;
   yAxis: AxisDefinition;
   xPosition: AxisPosition;
   yPosition: AxisPosition;
+  xAxisDims: Dimension;
+  yAxisDims: Dimension;
   data: DataTable;
+  mark?: (props: MarkProps) => React.ReactElement;
 }) {
   if (xPosition === "before" && yPosition == "before") {
     return (
@@ -29,25 +36,42 @@ function TableInner({
               padding: 0,
             }}
           >
-            <Axis orientation="horizontal" position="before" axis={xAxis} />
+            <div style={{
+              width: xAxisDims.width,
+              height: xAxisDims.height,
+              overflow: "scroll"
+            }}>
+              <Axis dimensions={xAxisDims} orientation="horizontal" position="before" axis={xAxis} />  
+            </div>
           </td>
         </tr>
         <tr>
           <td
             style={{
               padding: 0,
+              overflow: "scroll"
             }}
           >
-            <Axis orientation="vertical" position="before" axis={yAxis} />
+            <div style={{
+              width: yAxisDims.height,
+              height: yAxisDims.width,
+              overflow: "scroll"
+            }}>
+              <Axis dimensions={yAxisDims} orientation="vertical" position="before" axis={yAxis} />
+            </div>
           </td>
           <td
             style={{
-              width: "100%",
-              height: "100%",
               padding: 0,
             }}
           >
-            <Grid data={data} path={[]} xAxis={xAxis} yAxis={yAxis} />
+            <div style={{
+              overflow: "scroll",
+              width: xAxisDims.width,
+              height: yAxisDims.width,
+            }}>
+              <Grid mark={mark} data={data} path={[]} xAxis={xAxis} yAxis={yAxis} />
+            </div>
           </td>
         </tr>
       </>
@@ -70,7 +94,7 @@ function TableInner({
               height: "100%",
             }}
           >
-            <Grid data={data} path={[]} xAxis={xAxis} yAxis={yAxis} />
+            <Grid mark={mark} data={data} path={[]} xAxis={xAxis} yAxis={yAxis} />
           </td>
         </tr>
         <tr>
@@ -100,7 +124,7 @@ function TableInner({
               height: "100%",
             }}
           >
-            <Grid data={data} path={[]} xAxis={xAxis} yAxis={yAxis} />
+            <Grid mark={mark} data={data} path={[]} xAxis={xAxis} yAxis={yAxis} />
           </td>
           <td
             style={{
@@ -151,7 +175,7 @@ function TableInner({
               height: "100%",
             }}
           >
-            <Grid data={data} path={[]} xAxis={xAxis} yAxis={yAxis} />
+            <Grid mark={mark} data={data} path={[]} xAxis={xAxis} yAxis={yAxis} />
           </td>
           <td
             style={{
@@ -168,32 +192,37 @@ function TableInner({
 }
 
 export function Table({
-  xAxis,
-  yAxis,
+  rows,
+  columns,
   xPosition,
   yPosition,
   data,
+  mark,
 }: {
-  xAxis: AxisDefinition;
-  yAxis: AxisDefinition;
+  rows: number[];
+  columns: number[];
   xPosition: AxisPosition;
   yPosition: AxisPosition;
   data: DataTable;
+  mark?: (props: MarkProps) => React.ReactElement;
 }) {
+  if (!mark) mark = Text;
+  const { x, y, xDims, yDims } = useAxes({ rows, columns, data});
   return (
     <table
       style={{
-        width: "100%",
-        height: "100%",
         borderSpacing: 0,
         borderCollapse: "collapse",
       }}
     >
       <tbody>
         <TableInner
+          mark={mark}
           data={data}
-          xAxis={xAxis}
-          yAxis={yAxis}
+          xAxis={x}
+          yAxis={y}
+          xAxisDims={xDims}
+          yAxisDims={yDims}
           xPosition={xPosition}
           yPosition={yPosition}
         />
