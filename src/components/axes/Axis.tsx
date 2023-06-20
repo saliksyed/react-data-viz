@@ -119,19 +119,21 @@ function AxisScale({
   );
 }
 
-
-function getFinalAxisDims(orientation: AxisOrientation, dimensions? : Dimension) {
+function getFinalAxisDims(
+  orientation: AxisOrientation,
+  dimensions?: Dimension
+) {
   if (!dimensions) {
     if (orientation === "horizontal") {
-      return { width: "100%", height: undefined }
+      return { width: "100%", height: undefined };
     } else {
-      return { width: undefined, height: "100%" }
+      return { width: undefined, height: "100%" };
     }
   } else {
     if (orientation === "horizontal") {
-      return { width: dimensions.width, height: dimensions.height }
+      return { width: dimensions.width, height: dimensions.height };
     } else {
-      return { width: dimensions.height, height: dimensions.width }
+      return { width: dimensions.height, height: dimensions.width };
     }
   }
 }

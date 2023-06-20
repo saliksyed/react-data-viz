@@ -1,26 +1,17 @@
-import { useResizeHandler } from "../../hooks/resize";
 import { useCellData } from "../../hooks/data";
 import { MarkProps } from "../../lib/types";
-import { useState } from "react";
 
 export function Rect({
   filters,
   data,
   xRange,
   yRange,
+  width,
+  height,
 }: MarkProps) {
-  const [elem, setElem] = useState<HTMLDivElement | null>(null);
-  const { width, height } = useResizeHandler({ elem });
-  const { cellData } = useCellData({filters, data, xRange, yRange});
+  const { cellData } = useCellData({ filters, data, xRange, yRange });
   return (
-    <div
-      ref={setElem}
-      style={{
-        height: "100%",
-        width: "100%",
-        backgroundColor: "darkgray",
-      }}
-    >
+    <>
       {cellData.map((range, i) => {
         const color = "rgba(255, 0, 0, 0.5)";
         return (
@@ -37,6 +28,6 @@ export function Rect({
           />
         );
       })}
-    </div>
+    </>
   );
 }

@@ -37,6 +37,8 @@ export type MarkProps = {
   data: DataTable;
   xRange?: Range;
   yRange?: Range;
+  width: number;
+  height: number;
 };
 
 export type Range = {
@@ -54,9 +56,9 @@ export type AxisDefinition = {
   range?: Range;
 };
 
-export type Dimension = { width: number, height: number };
+export type Dimension = { width: number; height: number };
 
-export function getAxisDimensions(axis: AxisDefinition) : Dimension {
+export function getAxisDimensions(axis: AxisDefinition): Dimension {
   const CHAR_WIDTH = 18;
   const CHAR_HEIGHT = 24;
   const AXIS_WIDTH = 54;
@@ -79,14 +81,13 @@ export function getAxisDimensions(axis: AxisDefinition) : Dimension {
         axisItemsWidth += dims.width;
         axisItemsHeight = Math.max(dims.height, axisItemsHeight);
       }
-    })
+    });
   }
   return {
     width: Math.max(Math.max(titleWidth, axisItemsWidth), axisTitlesWidth),
     height: titleHeight + axisItemsHeight + axisTitlesHeight,
-  }
+  };
 }
-
 
 export function getAxisDefinition(
   items: Column[],
@@ -95,12 +96,14 @@ export function getAxisDefinition(
   if (items.length === 0) {
     return {
       title: "",
-      subitems: []
+      subitems: [],
     };
   } else {
     if (items[0].type === "quantitative") {
       if (items.length > 1) throw "Cannot nest after quantitative field";
-      const values = data.rows.map(d => d[items[0].name]).sort((a, b) => (a as number) - (b as number))
+      const values = data.rows
+        .map((d) => d[items[0].name])
+        .sort((a, b) => (a as number) - (b as number));
       return {
         title: items[0].name,
         range: {

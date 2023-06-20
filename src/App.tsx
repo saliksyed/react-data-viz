@@ -1,6 +1,30 @@
-import { DataTable } from "./lib/types";
+import { DataTable, MarkProps } from "./lib/types";
 import { Table } from "./components/layout/Table";
 import { Rect } from "./components/marks/Rect";
+import { Text } from "./components/marks/Text";
+
+function NewMark(props: MarkProps) {
+  return (
+    <>
+      <Rect
+        filters={props.filters}
+        data={props.data}
+        xRange={props.xRange}
+        yRange={props.yRange}
+        width={props.width}
+        height={props.height}
+      />
+      <Text
+        filters={props.filters}
+        data={props.data}
+        xRange={props.xRange}
+        yRange={props.yRange}
+        width={props.width}
+        height={props.height}
+      />
+    </>
+  );
+}
 
 function App() {
   const dataTable: DataTable = {
@@ -31,8 +55,8 @@ function App() {
       }}
     >
       <Table
-        mark={Rect}
-        rows={[1,2]}
+        mark={NewMark}
+        rows={[1, 2]}
         columns={[3]}
         data={dataTable}
         xPosition="before"

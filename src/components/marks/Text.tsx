@@ -8,19 +8,13 @@ export function Text({
   data,
   xRange,
   yRange,
+  width,
+  height,
 }: MarkProps) {
   const [elem, setElem] = useState<HTMLDivElement | null>(null);
-  const { width, height } = useResizeHandler({ elem });
-  const { cellData } = useCellData({filters, data, xRange, yRange});
+  const { cellData } = useCellData({ filters, data, xRange, yRange });
   return (
-    <div
-      ref={setElem}
-      style={{
-        height: "100%",
-        width: "100%",
-        backgroundColor: "darkgray",
-      }}
-    >
+    <>
       {cellData.map((item, i) => {
         const color = "rgba(255, 0, 0, 0.5)";
         return (
@@ -32,10 +26,11 @@ export function Text({
               marginTop: height - item.yPercent * height,
             }}
           >
-            {item.xValue ?? ""} {item.yValue ?? ""} {item.filters.map(d => d.value).join(", ")}
+            {item.xValue ?? ""} {item.yValue ?? ""}{" "}
+            {item.filters.map((d) => d.value).join(", ")}
           </div>
         );
       })}
-    </div>
+    </>
   );
 }

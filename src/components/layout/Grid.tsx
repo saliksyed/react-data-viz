@@ -1,5 +1,6 @@
 import { AxisDefinition, Filter, DataTable, MarkProps } from "../../lib/types";
-import { Text } from "../marks/Text";
+import { Mark } from "../marks/Mark";
+import { Rect } from "../marks/Rect";
 
 export function Grid({
   xAxis,
@@ -12,9 +13,9 @@ export function Grid({
   yAxis: AxisDefinition | null;
   path: Filter[];
   data: DataTable;
-  mark?: (props: MarkProps) => React.ReactElement
+  mark?: (props: MarkProps) => React.ReactElement;
 }) {
-  if (!mark) mark = Text;
+  if (!mark) mark = Rect;
   const borderColor = "0.25px solid lightgray";
 
   // Else recursively render a subgrid
@@ -38,10 +39,7 @@ export function Grid({
   if (
     !xAxis ||
     !yAxis ||
-    (xAxis &&
-      xAxis.range &&
-      yAxis &&
-      yAxis.range) ||
+    (xAxis && xAxis.range && yAxis && yAxis.range) ||
     (xAxis.subitems.length === 0 && yAxis.subitems.length === 0)
   ) {
     let xRange = undefined;
@@ -57,17 +55,30 @@ export function Grid({
           backgroundColor: "rgba(0, 0, 0, 0.5)",
         }}
       >
-        {mark({
-          xRange,
-          yRange,
-          filters: path,
-          data
-        })}
+        {
+          <Mark
+            mark={mark}
+            props={{
+              xRange,
+              yRange,
+              filters: path,
+              data,
+              width: 0,
+              height: 0,
+            }}
+          />
+        }
       </div>,
     ];
   } else {
-    const xItems = xAxis.subitems.length > 0 ? xAxis.subitems : [{ title: xAxis.title, axis: xAxis}];
-    const yItems = yAxis.subitems.length > 0 ? yAxis.subitems : [{ title: yAxis.title, axis: yAxis}];
+    const xItems =
+      xAxis.subitems.length > 0
+        ? xAxis.subitems
+        : [{ title: xAxis.title, axis: xAxis }];
+    const yItems =
+      yAxis.subitems.length > 0
+        ? yAxis.subitems
+        : [{ title: yAxis.title, axis: yAxis }];
     gridItems = xItems.map((x) => {
       return yItems.map((y) => {
         let soFar = structuredClone(path);
@@ -76,18 +87,25 @@ export function Grid({
         if (!yAxis.range) soFar.push({ field: yAxis.title, value: y.title });
         return (
           <div
-            key={'grid-'+x.title + '-' + y.title} 
+            key={"grid-" + x.title + "-" + y.title}
             style={{
               border: borderColor,
             }}
           >
-            {<Grid mark={mark} data={data} xAxis={x.axis} yAxis={y.axis} path={soFar} />}
+            {
+              <Grid
+                mark={mark}
+                data={data}
+                xAxis={x.axis}
+                yAxis={y.axis}
+                path={soFar}
+              />
+            }
           </div>
         );
       });
     });
-    
   }
-  
+
   return <div style={style}>{gridItems}</div>;
 }
