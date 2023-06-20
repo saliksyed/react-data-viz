@@ -10,14 +10,14 @@ function App() {
       { type: "quantitative", name: "d" },
     ],
     rows: [
-      { a: 4, b: 1, c: "true", d: 0.1 },
-      { a: 5, b: 3, c: "true", d: 0.1 },
-      { a: 5, b: 2, c: "false", d: 0.21 },
-      { a: 6, b: 1, c: "true", d: 0.51 },
-      { a: 4, b: 2, c: "true", d: 0.33 },
-      { a: 4, b: 2, c: "false", d: 0.25 },
-      { a: 6, b: 3, c: "true", d: 0.7 },
-      { a: 6, b: 3, c: "false", d: 0.1 },
+      { a: 1, b: 1, c: "true", d: 0.1 },
+      { a: 2, b: 2, c: "true", d: 0.1 },
+      { a: 3, b: 3, c: "false", d: 0.21 },
+      { a: 4, b: 4, c: "true", d: 0.51 },
+      { a: 5, b: 5, c: "true", d: 0.33 },
+      { a: 6, b: 6, c: "false", d: 0.25 },
+      { a: 7, b: 7, c: "true", d: 0.7 },
+      { a: 8, b: 8, c: "false", d: 0.1 },
     ],
   };
 

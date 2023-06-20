@@ -100,6 +100,8 @@ function AxisScale({
         display: "flex",
         background: "lightgray",
         overflow: "hidden",
+        minHeight: orientation === "vertical" ? 150 :  35,
+        minWidth: orientation === "horizontal" ? 150 : 35
       }}
     >
       <svg style={{
