@@ -13,9 +13,11 @@ import { useResizeHandler } from "../../hooks/resize";
 function AxisLabel({
   value,
   orientation,
+  emphasis,
 }: {
   value: Value;
   orientation: AxisOrientation;
+  emphasis?: boolean;
 }) {
   const style: any =
     orientation === "vertical"
@@ -31,8 +33,8 @@ function AxisLabel({
         justifyContent: "center",
         alignItems: "center",
         padding: 2,
-        background: "lightgray",
-        border: "0.25px solid gray",
+        color: emphasis ? "darkgray" : undefined,
+        fontStyle: emphasis ? "italic" : undefined,
         overflow: "hidden",
       }}
     >
@@ -105,7 +107,6 @@ function AxisScale({
       ref={setElem}
       style={{
         display: "flex",
-        background: "lightgray",
       }}
     >
       <svg
@@ -211,7 +212,7 @@ export function Axis({
                   }}
                 >
                   {position === "before" && (
-                    <AxisLabel value={d.title} orientation={orientation} />
+                    <AxisLabel value={d.title} emphasis={true} orientation={orientation} />
                   )}
                   {d.axis && (
                     <Axis
@@ -221,7 +222,7 @@ export function Axis({
                     />
                   )}
                   {position === "after" && (
-                    <AxisLabel value={d.title} orientation={orientation} />
+                    <AxisLabel value={d.title} emphasis={true} orientation={orientation} />
                   )}
                 </div>
               );

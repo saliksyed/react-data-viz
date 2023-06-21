@@ -35,12 +35,11 @@ export function Grid({
 
   let gridItems: any = [];
 
-  // if either axis is undefined, render mark
+  // Render mark on fringe node
   if (
-    !xAxis ||
-    !yAxis ||
+    !xAxis && !yAxis ||
     (xAxis && xAxis.range && yAxis && yAxis.range) ||
-    (xAxis.subitems.length === 0 && yAxis.subitems.length === 0)
+    (xAxis && xAxis.subitems.length === 0 && yAxis && yAxis.subitems.length === 0)
   ) {
     let xRange = undefined;
     let yRange = undefined;
@@ -48,6 +47,7 @@ export function Grid({
     if (yAxis && yAxis.range) yRange = yAxis.range;
     gridItems = [
       <div
+        className="mark-wrapper"
         style={{
           border: borderColor,
           width: "100%",
@@ -61,7 +61,7 @@ export function Grid({
             props={{
               xRange,
               yRange,
-              filters: path,
+              filters: structuredClone(path),
               data,
               cellData: [],
               width: 0,
@@ -71,7 +71,10 @@ export function Grid({
         }
       </div>,
     ];
+    
   } else {
+    if (!xAxis) xAxis = { title: "", subitems: []};
+    if (!yAxis) yAxis = { title: "", subitems: []};
     const xItems =
       xAxis.subitems.length > 0
         ? xAxis.subitems
@@ -84,8 +87,8 @@ export function Grid({
       return xItems.map((x) => {
         let soFar = structuredClone(path);
         if (!soFar) soFar = [];
-        if (!yAxis.range) soFar.push({ field: yAxis.title, value: y.title });
-        if (!xAxis.range) soFar.push({ field: xAxis.title, value: x.title });
+        if (!yAxis!.range) soFar.push({ field: yAxis!.title, value: y.title });
+        if (!xAxis!.range) soFar.push({ field: xAxis!.title, value: x.title });
         return (
           <div
             key={"grid-" + x.title + "-" + y.title}

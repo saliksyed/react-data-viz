@@ -18,6 +18,7 @@ const { cellData } = useCellData({ filters: props.filters, data: props.data, xRa
   props.cellData = cellData;
   return (
     <div
+      className="mark"
       ref={setElem}
       style={{
         height: "100%",

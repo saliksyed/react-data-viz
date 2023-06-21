@@ -8,6 +8,7 @@ export function Rect(props : MarkProps & React.HTMLAttributes<HTMLDivElement>) {
         return (
           <div
             {...props}
+            className="mark-rect"
             key={"rect-" + i}
             style={{
               border: "0.5px solid white",

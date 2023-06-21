@@ -9,6 +9,7 @@ export function Text(props : MarkProps & React.HTMLAttributes<HTMLDivElement>) {
           <div
             {...props}
             key={"text-" + i}
+            className="mark-text"
             style={{
               border: "0.5px solid white",
               position: "absolute",
